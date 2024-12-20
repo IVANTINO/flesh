@@ -7,13 +7,33 @@ cursor = con.cursor()
 
 app = Flask(__name__)
 
+@app.route('/', methods=['POST', 'GET'])
+def main():
+    cursor.execute('SELECT * FROM posts')
+    data = cursor.fetchall()
+
+
+    return render_template('index.html',data=data)
+
+
 
 @app.route('/register/')
 def web():
-    return render_template('register.html')
+    titel=request.form['titel']
+    image=request.form['image']
+    description=request.form['description']
+    cursor.execute(
+        f"INSERT INTO posts (titel, image, description) VALUES (?,?,?)",
+    [titel, image, description])
 
 
-@app.route('/main/', methods=['POST', 'GET'])
+
+@app.route('/add/')
+def add_page():
+
+    return render_template('add.html')
+
+@app.route('/save_register/', methods=['POST', 'GET'])
 def save():
     last_name = request.form['last_name']
     name = request.form['name']
@@ -26,12 +46,10 @@ def save():
         f"INSERT INTO users (last_name, name, patronymic, gender, email, username, password) VALUES (?,?,?,?,?,?,?)",
         [last_name, name, patronymic, gender, email, username, password])
     con.commit()
-    return 'ok'
+    return render_template('main.html')
 
 
-@app.route('/add/')
-def add_page():
-    return render_template('add.html')
+
 
 
 @app.route('/upload/', methods=['POST', 'GET'])
@@ -48,7 +66,8 @@ def save_post():
 @app.route('/all_posts/', methods=['POST', 'GET'])
 def get_posts():
     posts=cursor.execute("SELECT file_name FROM posts")
-    return render_template('all_postss.html' posts=posts)
+    data = cursor.fetchall()
+    return render_template('all_postss.html')
 
 
 @app.route('/login/', methods=['POST', 'GET'])
