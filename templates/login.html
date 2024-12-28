@@ -6,7 +6,13 @@
     <title>Форма авторизации</title>
 </head>
 <body>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<p class="{{ category }}">{{ message }}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
 <h2>Авторизация</h2>
 <form action="/authorization/" method="post">
     <!-- Поля для ввода логина -->
@@ -19,6 +25,15 @@
 
     <!-- Кнопка отправки формы -->
     <input type="submit" value="Войти">
+    <div class="container">
+        {% for users in data%}
+
+
+        {% endfor %}
+
+
+
+    </div>
 </form>
 </body>
 </html>
